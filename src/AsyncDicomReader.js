@@ -16,9 +16,9 @@ import { Tag } from "./Tag";
 import { DicomMessage, singleVRs } from "./DicomMessage";
 import { DicomMetaDictionary } from "./DicomMetaDictionary";
 import { DicomMetadataListener } from "./utilities/DicomMetadataListener.js";
-import { dcmjsLog } from "./log.js";
+import { loglevel } from "./log.js";
 
-const readLog = dcmjsLog.getLogger("AsyncDicomReader.dcmjs");
+const readLog = loglevel.getLogger("AsyncDicomReader.dcmjs");
 
 /**
  * This is an asynchronous binary DICOM reader.
