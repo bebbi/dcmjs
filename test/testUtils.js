@@ -3,12 +3,12 @@ import os from "os";
 import path from "path";
 import followRedirects from "follow-redirects";
 import AdmZip from "adm-zip";
-import { validationLog } from "./../src/log.js";
+import { getValidationLog } from "./../src/log.js";
 
 const { https } = followRedirects;
 
 // Don't show validation errors, as those are normally tested
-validationLog.setLevel(5);
+getValidationLog().setLevel(5);
 
 function downloadToFile(url, filePath) {
     return new Promise((resolve, reject) => {

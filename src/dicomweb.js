@@ -1,4 +1,4 @@
-import log from "./log.js";
+import { getLog } from "./log.js";
 
 class DICOMWEB {
     /*
@@ -63,7 +63,7 @@ class DICOMWEB {
             };
             request.onprogress = this.progressCallback;
             request.onerror = error => {
-                log.error(request.response);
+                getLog().error(request.response);
                 reject(error);
             };
             request.send(payload);
@@ -108,7 +108,7 @@ class DICOMWEB {
 
         new DICOMWEB(testOptions).patients().then(responses => {
             responses.forEach(patient => {
-                log.info(patient);
+                getLog().info(patient);
             });
         });
     }

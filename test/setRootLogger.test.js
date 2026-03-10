@@ -1,4 +1,10 @@
-import { setRootLogger, log, validationLog } from "../src/log.js";
+import {
+    setRootLogger,
+    getLog,
+    getValidationLog,
+    log,
+    validationLog
+} from "../src/log.js";
 
 // Creates a mock loglevel root with its own logger registry
 function createMockRoot() {
@@ -31,25 +37,23 @@ describe("setRootLogger", () => {
         );
     });
 
-    it("redirects log calls to the new root's loggers", () => {
+    it("redirects getLog() calls to the new root's loggers", () => {
         const { root, loggers } = createMockRoot();
 
         setRootLogger(root);
 
-        // Trigger a log call — this should resolve through the proxy
-        // to the new root's "dcmjs" logger
-        log.warn("test message");
+        getLog().warn("test message");
 
         expect(root.getLogger).toHaveBeenCalledWith("dcmjs");
         expect(loggers["dcmjs"].warn).toHaveBeenCalledWith("test message");
     });
 
-    it("redirects validationLog calls to the new root's loggers", () => {
+    it("redirects getValidationLog() calls to the new root's loggers", () => {
         const { root, loggers } = createMockRoot();
 
         setRootLogger(root);
 
-        validationLog.error("validation issue");
+        getValidationLog().error("validation issue");
 
         expect(root.getLogger).toHaveBeenCalledWith("validation.dcmjs");
         expect(loggers["validation.dcmjs"].error).toHaveBeenCalledWith(
@@ -62,15 +66,51 @@ describe("setRootLogger", () => {
         const second = createMockRoot();
 
         setRootLogger(first.root);
-        log.warn("to first");
+        getLog().warn("to first");
         expect(first.loggers["dcmjs"].warn).toHaveBeenCalledWith("to first");
 
         setRootLogger(second.root);
-        log.warn("to second");
+        getLog().warn("to second");
         expect(second.loggers["dcmjs"].warn).toHaveBeenCalledWith("to second");
 
         // First root should not have received the second message
         expect(first.loggers["dcmjs"].warn).toHaveBeenCalledTimes(1);
+    });
+
+    it("deprecated log export still works but warns", () => {
+        const warnSpy = jest.spyOn(console, "warn").mockImplementation();
+        const { root, loggers } = createMockRoot();
+
+        setRootLogger(root);
+
+        log.warn("via deprecated export");
+
+        expect(warnSpy).toHaveBeenCalledWith(
+            expect.stringContaining("dcmjs.log is deprecated")
+        );
+        expect(loggers["dcmjs"].warn).toHaveBeenCalledWith(
+            "via deprecated export"
+        );
+
+        warnSpy.mockRestore();
+    });
+
+    it("deprecated validationLog export still works but warns", () => {
+        const warnSpy = jest.spyOn(console, "warn").mockImplementation();
+        const { root, loggers } = createMockRoot();
+
+        setRootLogger(root);
+
+        validationLog.error("via deprecated export");
+
+        expect(warnSpy).toHaveBeenCalledWith(
+            expect.stringContaining("dcmjs.validationLog is deprecated")
+        );
+        expect(loggers["validation.dcmjs"].error).toHaveBeenCalledWith(
+            "via deprecated export"
+        );
+
+        warnSpy.mockRestore();
     });
 
     afterAll(() => {

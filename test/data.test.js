@@ -4,7 +4,7 @@ import fsPromises from "fs/promises";
 import path from "path";
 import { WriteBufferStream } from "../src/BufferStream";
 import dcmjs from "../src/index.js";
-import { log } from "./../src/log.js";
+import { getLog } from "./../src/log.js";
 import { getTestDataset, getZippedTestDataset } from "./testUtils.js";
 
 import { promisify } from "util";
@@ -829,14 +829,14 @@ describe("With a SpecificCharacterSet tag", () => {
     });
 
     it("Throws an exception on an unsupported character set", async () => {
-        log.setLevel(5);
+        getLog().setLevel(5);
         expect(() => readEncodedLongString("nope", [])).toThrow(
             new Error("Unsupported character set: nope")
         );
     });
 
     it("Doesn't throw an exception on an unsupported character set when ignoring errors", async () => {
-        log.setLevel(5);
+        getLog().setLevel(5);
         expect(
             readEncodedLongString("nope", [0x68, 0x69], { ignoreErrors: true })
         ).toEqual("hi");

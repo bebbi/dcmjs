@@ -5,7 +5,7 @@ import {
     PN_COMPONENT_DELIMITER,
     VM_DELIMITER
 } from "./constants/dicom.js";
-import { log, validationLog } from "./log.js";
+import { getLog, getValidationLog } from "./log.js";
 import dicomJson from "./utilities/dicomJson.js";
 
 // We replace the tag with a Proxy which intercepts assignments to obj[valueProp]
@@ -197,7 +197,7 @@ class ValueRepresentation {
                     value: this.defaultValue
                 };
             if (this.maxLength != length)
-                log.error(
+                getLog().error(
                     "Invalid length for fixed length tag, vr " +
                         this.type +
                         ", length " +
@@ -315,7 +315,7 @@ class ValueRepresentation {
                     checkValue +
                     ", length: " +
                     displaylen;
-                if (isString) log.info(errmsg);
+                if (isString) getLog().info(errmsg);
                 else throw new Error(errmsg);
             }
             total += checklen;
@@ -350,13 +350,13 @@ class ValueRepresentation {
             if (type == "ox") {
                 // TODO: determine VR based on context (could be 1 byte pixel data)
                 // https://github.com/dgobbi/vtk-dicom/issues/38
-                validationLog.error("Invalid vr type", type, "- using OW");
+                getValidationLog().error("Invalid vr type", type, "- using OW");
                 vr = VRinstances["OW"];
             } else if (type == "xs") {
-                validationLog.error("Invalid vr type", type, "- using US");
+                getValidationLog().error("Invalid vr type", type, "- using US");
                 vr = VRinstances["US"];
             } else {
-                validationLog.error("Invalid vr type", type, "- using UN");
+                getValidationLog().error("Invalid vr type", type, "- using UN");
                 vr = VRinstances["UN"];
             }
         }

@@ -14,7 +14,12 @@ registerPrivatesModule(privateData);
 import { Tag } from "./Tag.js";
 import { ValueRepresentation } from "./ValueRepresentation.js";
 import { Colors } from "./colors.js";
-import log, { loglevel, setRootLogger } from "./log.js";
+import log, {
+    getLog,
+    getValidationLog,
+    loglevel,
+    setRootLogger
+} from "./log.js";
 
 import { AsyncDicomReader } from "./AsyncDicomReader.js";
 
@@ -107,6 +112,8 @@ const dcmjs = {
     sr,
     utilities,
     log,
+    getLog,
+    getValidationLog,
     loglevel,
     setRootLogger,
     anonymizer,
@@ -130,6 +137,8 @@ export {
     sr,
     utilities,
     log,
+    getLog,
+    getValidationLog,
     loglevel,
     setRootLogger
 };

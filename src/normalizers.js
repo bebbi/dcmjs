@@ -1,4 +1,4 @@
-import log from "./log.js";
+import { getLog } from "./log.js";
 import { DicomMetaDictionary } from "./DicomMetaDictionary.js";
 import { DerivedImage } from "./derivations/index.js";
 import Segmentation from "./derivations/Segmentation.js";
@@ -20,7 +20,7 @@ class Normalizer {
                 sopClassUID = dataset.SOPClassUID;
             }
             if (dataset.SOPClassUID !== sopClassUID) {
-                log.error(
+                getLog().error(
                     "inconsistent sopClassUIDs: ",
                     dataset.SOPClassUID,
                     sopClassUID
@@ -92,7 +92,7 @@ class Normalizer {
         let normalizerClass = Normalizer.normalizerForSOPClassUID(sopClassUID);
 
         if (!normalizerClass) {
-            log.error("no normalizerClass for ", sopClassUID);
+            getLog().error("no normalizerClass for ", sopClassUID);
             return undefined;
         }
         let normalizer = new normalizerClass(datasets);
@@ -193,13 +193,13 @@ class ImageNormalizer extends Normalizer {
 
         // assign array buffers
         if (ds.BitsAllocated !== 16) {
-            log.error(
+            getLog().error(
                 "Only works with 16 bit data, not " +
                     String(this.dataset.BitsAllocated)
             );
         }
         if (referenceDataset._vrMap && !referenceDataset._vrMap.PixelData) {
-            log.warn("No vr map given for pixel data, using OW");
+            getLog().warn("No vr map given for pixel data, using OW");
             ds._vrMap = { PixelData: "OW" };
         } else {
             ds._vrMap = { PixelData: referenceDataset._vrMap.PixelData };
@@ -225,7 +225,7 @@ class ImageNormalizer extends Normalizer {
                         `NumberOfFrames ${ds.NumberOfFrames}\n` +
                         `pair ${pair}\n` +
                         `dataset PixelData size ${dataset.PixelData.length}`;
-                    log.error(message);
+                    getLog().error(message);
                 }
             }
             frame++;
@@ -233,7 +233,7 @@ class ImageNormalizer extends Normalizer {
 
         if (ds.NumberOfFrames < 2) {
             // TODO
-            log.error(
+            getLog().error(
                 "Cannot populate shared groups uniquely without multiple frames"
             );
         }
@@ -304,7 +304,7 @@ class ImageNormalizer extends Normalizer {
         let ds = this.dataset;
 
         if (!ds.NumberOfFrames) {
-            log.error("Missing number or frames not supported");
+            getLog().error("Missing number or frames not supported");
             return;
         }
 
@@ -328,7 +328,7 @@ class ImageNormalizer extends Normalizer {
         }
 
         if (!ds.SharedFunctionalGroupsSequence) {
-            log.error(
+            getLog().error(
                 "Can only process multiframe data with SharedFunctionalGroupsSequence"
             );
         }
@@ -525,7 +525,7 @@ class PMImageNormalizer extends ImageNormalizer {
         super.normalize();
         let ds = this.datasets[0];
         if (ds.BitsAllocated !== 32) {
-            log.error(
+            getLog().error(
                 "Only works with 32 bit data, not " + String(ds.BitsAllocated)
             );
         }

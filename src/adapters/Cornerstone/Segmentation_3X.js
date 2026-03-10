@@ -1,4 +1,4 @@
-import log from "../../log.js";
+import { getLog } from "../../log.js";
 import ndarray from "ndarray";
 import { BitArray } from "../../bitArray.js";
 import { datasetToBlob } from "../../datasetToBlob.js";
@@ -368,13 +368,13 @@ function unpackPixelData(multiframe) {
         undefined;
 
     if (!onlyMaxAndZero) {
-        log.warn(
+        getLog().warn(
             "This is a fractional segmentation, which is not currently supported."
         );
         return;
     }
 
-    log.warn(
+    getLog().warn(
         "This segmentation object is actually binary... processing as such."
     );
 

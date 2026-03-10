@@ -1,10 +1,10 @@
 import fs from "fs";
 import path from "path";
 import dcmjs from "../../src/index.js";
-import { validationLog } from "./../../src/log.js";
+import { getValidationLog } from "./../../src/log.js";
 
 // Ignore validation errors
-validationLog.setLevel(5);
+getValidationLog().setLevel(5);
 
 const { DicomMessage } = dcmjs.data;
 

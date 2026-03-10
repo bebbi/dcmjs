@@ -1,4 +1,4 @@
-import log from "../../log.js";
+import { getLog } from "../../log.js";
 
 const knownUnits = [
     // Standard UCUM units.
@@ -187,7 +187,7 @@ const unit2CodingValue = units => {
     const baseUnit = space === -1 ? units : units.substring(0, space);
     const codingUnit = unitCodeMap[units] || unitCodeMap[baseUnit];
     if (!codingUnit) {
-        log.error("Unspecified units", units);
+        getLog().error("Unspecified units", units);
 
         return {
             CodeValue: `[arb'U]{${units}}`,

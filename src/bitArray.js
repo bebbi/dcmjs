@@ -1,5 +1,5 @@
 /* eslint no-bitwise: 0 */
-import log from "./log.js";
+import { getLog } from "./log.js";
 
 const BitArray = {
     getBytesForBinaryFrame,
@@ -28,7 +28,7 @@ function getBytesForBinaryFrame(numPixels) {
 function pack(pixelData) {
     const numPixels = pixelData.length;
 
-    log.debug("numPixels: " + numPixels);
+    getLog().debug("numPixels: " + numPixels);
 
     const length = getBytesForBinaryFrame(numPixels);
     //log.info('getBytesForBinaryFrame: ' + length);

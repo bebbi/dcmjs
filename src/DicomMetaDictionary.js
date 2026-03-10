@@ -1,6 +1,6 @@
 import { dictionary } from "./dictionary.fast.js";
 import { getAllStandardTagEntries } from "./dicom.lookup.js";
-import log from "./log.js";
+import { getLog } from "./log.js";
 import addAccessors from "./utilities/addAccessors";
 import { ValueRepresentation } from "./ValueRepresentation";
 
@@ -237,7 +237,7 @@ export class DicomMetaDictionary {
                         if (dataset._vrMap && dataset._vrMap[naturalName]) {
                             dataItem.vr = dataset._vrMap[naturalName];
                         } else {
-                            log.debug(
+                            getLog().debug(
                                 "No value representation given for",
                                 naturalName
                             );
@@ -278,7 +278,7 @@ export class DicomMetaDictionary {
                             }
 
                             if (value.length > maxLength) {
-                                log.warn(
+                                getLog().warn(
                                     `Truncating value ${value} of ${naturalName} because it is longer than ${maxLength}`
                                 );
                                 return value.slice(0, maxLength);
@@ -294,7 +294,7 @@ export class DicomMetaDictionary {
             } else {
                 const validMetaNames = ["_vrMap", "_meta"];
                 if (validMetaNames.indexOf(name) == -1) {
-                    log.debug(
+                    getLog().debug(
                         "Unknown name in dataset",
                         name,
                         ":",

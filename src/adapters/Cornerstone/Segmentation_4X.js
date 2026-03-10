@@ -1,4 +1,4 @@
-import log from "../../log.js";
+import { getLog } from "../../log.js";
 import ndarray from "ndarray";
 import { BitArray } from "../../bitArray.js";
 import { datasetToBlob } from "../../datasetToBlob.js";
@@ -1099,7 +1099,7 @@ function unpackPixelData(multiframe) {
     }
 
     if (data === undefined) {
-        log.error("This segmentation pixeldata is undefined.");
+        getLog().error("This segmentation pixeldata is undefined.");
     }
 
     if (segType === "BINARY") {
@@ -1118,7 +1118,7 @@ function unpackPixelData(multiframe) {
         return;
     }
 
-    log.warn(
+    getLog().warn(
         "This segmentation object is actually binary... processing as such."
     );
 

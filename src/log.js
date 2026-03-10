@@ -19,26 +19,6 @@ function getValidationLog() {
     return _validationLog;
 }
 
-// Proxies that delegate to the current logger, so callers can do
-// log.warn(...) without caring whether the root has been swapped.
-const log = new Proxy(
-    {},
-    {
-        get(_, prop) {
-            return getLog()[prop];
-        }
-    }
-);
-
-const validationLog = new Proxy(
-    {},
-    {
-        get(_, prop) {
-            return getValidationLog()[prop];
-        }
-    }
-);
-
 /**
  * Replace the root loglevel instance used by dcmjs.
  * Call this before any dcmjs parsing to share a single loglevel
@@ -55,5 +35,42 @@ function setRootLogger(rootLogger) {
     _validationLog = null;
 }
 
-export { log, validationLog, loglevel, setRootLogger };
+// Deprecated proxies — kept for backwards compatibility.
+// Use getLog(), getValidationLog(), or setRootLogger() instead.
+let _logDeprecationWarned = false;
+const log = new Proxy(
+    {},
+    {
+        get(_, prop) {
+            if (!_logDeprecationWarned) {
+                console.warn(
+                    "dcmjs.log is deprecated. Use dcmjs.loglevel.getLogger('dcmjs') or dcmjs.setRootLogger() instead."
+                );
+                _logDeprecationWarned = true;
+            }
+            return getLog()[prop];
+        }
+    }
+);
+
+let _validationLogDeprecationWarned = false;
+const validationLog = new Proxy(
+    {},
+    {
+        get(_, prop) {
+            if (!_validationLogDeprecationWarned) {
+                console.warn(
+                    "dcmjs.validationLog is deprecated. Use dcmjs.loglevel.getLogger('validation.dcmjs') or dcmjs.setRootLogger() instead."
+                );
+                _validationLogDeprecationWarned = true;
+            }
+            return getValidationLog()[prop];
+        }
+    }
+);
+
+export { getLog, getValidationLog, loglevel, setRootLogger };
+
+// Deprecated exports — will be removed in a future version.
+export { log, validationLog };
 export default log;

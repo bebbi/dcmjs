@@ -13,7 +13,7 @@ import {
 import { DicomDict } from "./DicomDict.js";
 import { DicomMetaDictionary } from "./DicomMetaDictionary.js";
 import { Tag } from "./Tag.js";
-import { log } from "./log.js";
+import { getLog } from "./log.js";
 import { deepEqual } from "./utilities/deepEqual";
 import { ValueRepresentation } from "./ValueRepresentation.js";
 
@@ -27,7 +27,7 @@ export class DicomMessage {
         untilTag = null,
         includeUntilTagValue = false
     ) {
-        log.warn("DicomMessage.read to be deprecated after dcmjs 0.24.x");
+        getLog().warn("DicomMessage.read to be deprecated after dcmjs 0.24.x");
         return this._read(bufferStream, syntax, {
             ignoreErrors: ignoreErrors,
             untilTag: untilTag,
@@ -41,7 +41,9 @@ export class DicomMessage {
         untilTag = null,
         includeUntilTagValue = false
     ) {
-        log.warn("DicomMessage.readTag to be deprecated after dcmjs 0.24.x");
+        getLog().warn(
+            "DicomMessage.readTag to be deprecated after dcmjs 0.24.x"
+        );
         return this._readTag(bufferStream, syntax, {
             untilTag: untilTag,
             includeUntilTagValue: includeUntilTagValue
@@ -82,7 +84,7 @@ export class DicomMessage {
                             coding = encodingMapping[coding];
                             bufferStream.setDecoder(new TextDecoder(coding));
                         } else if (ignoreErrors) {
-                            log.warn(
+                            getLog().warn(
                                 `Unsupported character set: ${coding}, using default character set`
                             );
                         } else {
@@ -91,7 +93,7 @@ export class DicomMessage {
                     }
                     if (readInfo.values.length > 1) {
                         if (ignoreErrors) {
-                            log.warn(
+                            getLog().warn(
                                 "Using multiple character sets is not supported, proceeding with just the first character set",
                                 readInfo.values
                             );
@@ -117,7 +119,7 @@ export class DicomMessage {
             return dict;
         } catch (err) {
             if (ignoreErrors) {
-                log.warn("WARN:", err);
+                getLog().warn("WARN:", err);
                 return dict;
             }
             throw err;

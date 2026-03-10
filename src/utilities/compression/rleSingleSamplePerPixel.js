@@ -1,4 +1,4 @@
-import log from "../../log.js";
+import { getLog } from "../../log.js";
 
 /**
  * Encodes a non-bitpacked frame which has one sample per pixel.
@@ -160,7 +160,7 @@ function decodeFrame(rleEncodedFrame, pixelData) {
     const header = new Uint32Array(rleEncodedFrame, 0, 16);
 
     if (header[0] !== 1) {
-        log.error(
+        getLog().error(
             `rleSingleSamplePerPixel only supports fragments with single Byte Segments (for rle encoded segmentation data) at the current time. This rleEncodedFrame has ${header[0]} Byte Segments.`
         );
 
@@ -168,7 +168,7 @@ function decodeFrame(rleEncodedFrame, pixelData) {
     }
 
     if (header[1] !== 64) {
-        log.error(
+        getLog().error(
             "Data offset of Byte Segment 1 should be 64 bytes, this rle fragment is encoded incorrectly."
         );
 
